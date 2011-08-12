@@ -56,19 +56,19 @@ public class HomeServlet extends HttpServlet {
 				System.out.println("accessToken: " + accessToken);
 				if(accessToken == null || "".equals(accessToken)) {
 					req.setAttribute("sendRedirect", true);
-					System.out.println("sending redirect");
 				} else {
 					req.setAttribute("sendRedirect", false);					
 					req.setAttribute("checkins", getCheckInInfo(req, getOAuthToken(data)));
-					System.out.println("not sending redirect");
 				}
 			} else {
 				req.setAttribute("sendRedirect", true);
-				System.out.println("sending redirect");
 			}
+		} else {
+			req.setAttribute("sendRedirect", true);
 		}
 		
-	    req.getRequestDispatcher("facebook.jsp").forward(req, resp);
+		System.out.println("send redirect: " + req.getAttribute("sendRedirect"));
+	    req.getRequestDispatcher("canvas.jsp").forward(req, resp);
 
 	}
 	

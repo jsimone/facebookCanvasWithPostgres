@@ -35,15 +35,12 @@ public class HomeServlet extends HttpServlet {
 				System.out.println("payload after replace: " + payloadAfterReplace);
 				String data = new String(Base64.decodeBase64(payloadAfterReplace.getBytes()));
 				System.out.println("data from elements" + data);
-				req.setAttribute("test", data);
+				req.setAttribute("sendRedirect", false);
+				req.setAttribute("data", data);
 			} else {
-				String payload = signed_request.substring(signed_request.indexOf('.'));
-				String data = String.valueOf(DatatypeConverter.parseBase64Binary(payload.replaceAll("-_", "+/")));
-				System.out.println("data from substr" + data);
-				req.setAttribute("test", data);
+				req.setAttribute("sendRedirect", true);
 			}
 		}
-		
 		
 	    req.getRequestDispatcher("facebook.jsp").forward(req, resp);
 

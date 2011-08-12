@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.codec.binary.Base64;
+
 public class HomeServlet extends HttpServlet {
 
 	@Override
@@ -31,7 +33,7 @@ public class HomeServlet extends HttpServlet {
 				System.out.println("payload: " + payload);
 				String payloadAfterReplace = payload.replaceAll("-_", "+/");
 				System.out.println("payload after replace: " + payloadAfterReplace);
-				String data = String.valueOf(DatatypeConverter.parseBase64Binary(payloadAfterReplace));
+				String data = new String(Base64.decodeBase64(payloadAfterReplace.getBytes()));
 				System.out.println("data from elements" + data);
 				req.setAttribute("test", data);
 			} else {

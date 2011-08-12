@@ -53,7 +53,8 @@ public class HomeServlet extends HttpServlet {
 				System.out.println("data from elements" + data);
 				req.setAttribute("oauth", getOAuthToken(data));
 				String accessToken = getOAuthToken(data);
-				if(accessToken == null) {
+				System.out.println("accessToken: " + accessToken);
+				if(accessToken == null || "".equals(accessToken)) {
 					req.setAttribute("sendRedirect", true);
 				} else {
 					req.setAttribute("sendRedirect", false);					

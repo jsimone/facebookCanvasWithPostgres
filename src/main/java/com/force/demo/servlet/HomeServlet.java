@@ -21,12 +21,15 @@ public class HomeServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String signed_request = req.getParameter("signed_request");
 		
+		System.out.println("signed request: " + signed_request);
 		String[] elements = signed_request.split(".");
 		
+		System.out.println("elements " + elements);
 		String encodedSignature = elements[0];
 		String payload = elements[1];
 		
 		String data = String.valueOf(DatatypeConverter.parseBase64Binary(payload.replaceAll("-_", "+/")));
+		System.out.println("data " + data);
 		
 	    req.setAttribute("test", data);
 	    req.getRequestDispatcher("facebook.jsp").forward(req, resp);

@@ -41,8 +41,6 @@ public class HomeServlet extends HttpServlet {
 			if(elements.length > 1) {			
 				String payload = elements[1];
 				System.out.println("payload: " + payload);
-				//String payloadAfterReplace = payload.replaceAll("-_", "+/");
-				//System.out.println("payload after replace: " + payloadAfterReplace);
 				String data = new String(Base64.decodeBase64(payload.getBytes()));
 				
 		        Pattern p = Pattern.compile("[\\x00-\\x1f]");
@@ -53,10 +51,14 @@ public class HomeServlet extends HttpServlet {
 		        }
 				
 				System.out.println("data from elements" + data);
-				req.setAttribute("sendRedirect", false);
-				req.setAttribute("data", data);
 				req.setAttribute("oauth", getOAuthToken(data));
-				req.setAttribute("checkins", getCheckInInfo(req, getOAuthToken(data)));
+				String accessToken = getOAuthToken(data);
+				if(accessToken == null) {
+					req.setAttribute("sendRedirect", true);
+				} else {
+					req.setAttribute("sendRedirect", false);					
+					req.setAttribute("checkins", getCheckInInfo(req, getOAuthToken(data)));
+				}
 			} else {
 				req.setAttribute("sendRedirect", true);
 			}

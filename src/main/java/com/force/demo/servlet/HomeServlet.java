@@ -23,14 +23,18 @@ public class HomeServlet extends HttpServlet {
 		
 		if(signed_request != null) {
 			System.out.println("signed request: " + signed_request);
-			String[] elements = signed_request.split(".");
+			String[] elements = signed_request.split("\\.");
 			System.out.println("elements " + elements);
 			
 			if(elements.length > 1) {			
-				String encodedSignature = elements[0];
 				String payload = elements[1];
 				String data = String.valueOf(DatatypeConverter.parseBase64Binary(payload.replaceAll("-_", "+/")));
-				System.out.println("data " + data);
+				System.out.println("data from elements" + data);
+				req.setAttribute("test", data);
+			} else {
+				String payload = signed_request.substring(signed_request.indexOf('.'));
+				String data = String.valueOf(DatatypeConverter.parseBase64Binary(payload.replaceAll("-_", "+/")));
+				System.out.println("data from substr" + data);
 				req.setAttribute("test", data);
 			}
 		}

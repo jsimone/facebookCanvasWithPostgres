@@ -1,6 +1,11 @@
 package com.force.demo.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +56,7 @@ public class HomeServlet extends HttpServlet {
 				req.setAttribute("sendRedirect", false);
 				req.setAttribute("data", data);
 				req.setAttribute("oauth", getOAuthToken(data));
+				req.setAttribute("checkins", getCheckInInfo(req, getOAuthToken(data)));
 			} else {
 				req.setAttribute("sendRedirect", true);
 			}
@@ -78,5 +84,48 @@ public class HomeServlet extends HttpServlet {
 		
 		return oauthToken;
 	}
+	
+    private URL buildFBUrl(HttpServletRequest req, String target, String accessToken) throws MalformedURLException {
+        return new URL("https://graph.facebook.com" + target + "?access_token=" + accessToken);
+    }
+    
+    private String readApiData(URL apiUrl) {
+        StringBuilder jsonReturn = new StringBuilder();
+        BufferedReader in = null;
+        
+        try {
+            URLConnection urlConn = apiUrl.openConnection();   
+            in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+            
+            String inputLine;
+            
+            while((inputLine = in.readLine()) != null) {
+                jsonReturn.append(inputLine);
+            }             
+        } catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(in != null) {
+                    in.close();                
+                }   
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return jsonReturn.toString();        
+    }
+    
+    private String getCheckInInfo(HttpServletRequest req, String token) {
+        URL restUrl;
+        try {
+            restUrl = buildFBUrl(req, "/me/checkins", token);
+            return readApiData(restUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

@@ -11,12 +11,12 @@
  <!DOCTYPE html>
  <html>
     <head>
-    	<script type="text/javascript">
 		
 			<c:if test="sendRedirect">
-				top.location.href='https://www.facebook.com/dialog/oauth?client_id=135651429859631&redirect_uri=http://apps.facebook.com/jscanvastest/&scope=email,user_checkins,friends_checkins'
+    			<script type="text/javascript">
+					top.location.href='https://www.facebook.com/dialog/oauth?client_id=135651429859631&redirect_uri=http://apps.facebook.com/jscanvastest/&scope=email,user_checkins,friends_checkins'
+				</script>
 			</c:if>
-		</script>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 		<style type="text/css">
 		  html { height: 100% }

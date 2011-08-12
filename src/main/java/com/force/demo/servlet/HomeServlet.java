@@ -28,7 +28,10 @@ public class HomeServlet extends HttpServlet {
 			
 			if(elements.length > 1) {			
 				String payload = elements[1];
-				String data = String.valueOf(DatatypeConverter.parseBase64Binary(payload.replaceAll("-_", "+/")));
+				System.out.println("payload: " + payload);
+				String payloadAfterReplace = payload.replaceAll("-_", "+/");
+				System.out.println("payload after replace: " + payloadAfterReplace);
+				String data = String.valueOf(DatatypeConverter.parseBase64Binary(payloadAfterReplace));
 				System.out.println("data from elements" + data);
 				req.setAttribute("test", data);
 			} else {

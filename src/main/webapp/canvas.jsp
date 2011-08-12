@@ -66,6 +66,7 @@
 	         populateCheckins(eval(${checkins}), map);
          }
 		
+		window.onload(createMap());
 		</script>
       
     </head>
@@ -73,11 +74,7 @@
       <script src="js/jquery-1.6.2.min.js">
       </script>
       <br><br>
-      Where Have You Been?
-      
-      <form>
-      	<input type="button" value="populate map" onclick="createMap()"/>
-      </form>
+      Your recent check-ins:
       
       <div id="map_canvas" style="width:500px; height:400px"></div>
       

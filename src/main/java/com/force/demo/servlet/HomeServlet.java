@@ -35,9 +35,9 @@ public class HomeServlet extends HttpServlet {
 			if(elements.length > 1) {			
 				String payload = elements[1];
 				System.out.println("payload: " + payload);
-				String payloadAfterReplace = payload.replaceAll("-_", "+/");
-				System.out.println("payload after replace: " + payloadAfterReplace);
-				String data = new String(Base64.decodeBase64(payloadAfterReplace.getBytes()));
+				//String payloadAfterReplace = payload.replaceAll("-_", "+/");
+				//System.out.println("payload after replace: " + payloadAfterReplace);
+				String data = new String(Base64.decodeBase64(payload.getBytes()));
 				System.out.println("data from elements" + data);
 				req.setAttribute("sendRedirect", false);
 				req.setAttribute("data", data);

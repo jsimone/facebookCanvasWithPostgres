@@ -1,13 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-<head>
-
-</head>
-
-
-
-
-
  <!DOCTYPE html>
  <html>
     <head>
@@ -74,7 +65,11 @@
       <script src="js/jquery-1.6.2.min.js">
       </script>
       <br><br>
-      Your recent check-ins:
+      Where Have You Been?
+      
+      <form>
+      	<input type="button" value="populate map" onclick="createMap()"/>
+      </form>
       
       <div id="map_canvas" style="width:500px; height:400px"></div>
       

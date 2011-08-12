@@ -43,12 +43,7 @@ public class HomeServlet extends HttpServlet {
 				System.out.println("payload: " + payload);
 				String data = new String(Base64.decodeBase64(payload.getBytes()));
 				
-		        Pattern p = Pattern.compile("[\\x00-\\x1f]");
-		        Matcher m = p.matcher(data);
-		        data = m.replaceAll("");
-		        if(data.charAt(data.length() - 1) != '}') {
-		        	data = data + '}';
-		        }
+				data = cleanJson(data);
 				
 				System.out.println("data from elements" + data);
 				req.setAttribute("oauth", getOAuthToken(data));
@@ -70,6 +65,32 @@ public class HomeServlet extends HttpServlet {
 		System.out.println("send redirect: " + req.getAttribute("sendRedirect"));
 	    req.getRequestDispatcher("canvas.jsp").forward(req, resp);
 
+	}
+	
+	private String cleanJson(String data) {
+        String outputData = null;
+		Pattern p = Pattern.compile("[\\x00-\\x1f]");
+        Matcher m = p.matcher(data);
+        outputData = m.replaceAll("");
+        if(curlyBalance(outputData) > 0) {
+        	outputData = outputData + '}';
+        }
+        return outputData;
+	}
+	
+	//return a positive number if the number of { is greater
+	//than the number of }
+	private int curlyBalance(String data) {
+		int count = 0;
+		for(int i = 0; i< data.length(); i++) {
+			if(data.charAt(i) == '{') {
+				count++;
+			}
+			if(data.charAt(i) == '}') {
+				count--;
+			}
+		}
+		return count;
 	}
 	
 	private String getOAuthToken(String data) throws ServletException {

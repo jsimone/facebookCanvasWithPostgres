@@ -1,12 +1,13 @@
 package com.force.demo.servlet;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.JsonNode;
@@ -38,6 +39,11 @@ public class HomeServlet extends HttpServlet {
 				//String payloadAfterReplace = payload.replaceAll("-_", "+/");
 				//System.out.println("payload after replace: " + payloadAfterReplace);
 				String data = new String(Base64.decodeBase64(payload.getBytes()));
+				
+		        Pattern p = Pattern.compile("{cntrl}");
+		        Matcher m = p.matcher(data);
+		        data = m.replaceAll("");
+				
 				System.out.println("data from elements" + data);
 				req.setAttribute("sendRedirect", false);
 				req.setAttribute("data", data);

@@ -40,7 +40,7 @@ public class HomeServlet extends HttpServlet {
 				//System.out.println("payload after replace: " + payloadAfterReplace);
 				String data = new String(Base64.decodeBase64(payload.getBytes()));
 				
-		        Pattern p = Pattern.compile("{cntrl}");
+		        Pattern p = Pattern.compile("[\\x00-\\x1f]");
 		        Matcher m = p.matcher(data);
 		        data = m.replaceAll("");
 				

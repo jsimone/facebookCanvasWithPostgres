@@ -43,7 +43,7 @@ public class HomeServlet extends HttpServlet {
 		        Pattern p = Pattern.compile("[\\x00-\\x1f]");
 		        Matcher m = p.matcher(data);
 		        data = m.replaceAll("");
-		        if(data.charAt(data.length()) != '}') {
+		        if(data.charAt(data.length() - 1) != '}') {
 		        	data = data + '}';
 		        }
 				

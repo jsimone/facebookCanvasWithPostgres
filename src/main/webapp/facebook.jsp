@@ -51,18 +51,7 @@
 			marker.setMap(map);
 			  
 		  }
-		
-		</script>
-      
-    </head>
-    <body onload="checkLoginAndLoadData()">
-      <div id="fb-root"></div>
-      <script src="http://connect.facebook.net/en_US/all.js">
-      </script>
-      <script src="js/jquery-1.6.2.min.js">
-      </script>
-      <script>
-         
+		  
          function populateCheckins(data, map){
         			  
 			var checkins = data.data;
@@ -76,8 +65,12 @@
 	         var map = initializeMap();
 	         populateCheckins(eval(${checkins}), map);
          }
-
-         
+		
+		</script>
+      
+    </head>
+    <body onload="checkLoginAndLoadData()">
+      <script src="js/jquery-1.6.2.min.js">
       </script>
       <br><br>
       Where Have You Been?

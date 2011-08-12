@@ -9,11 +9,9 @@
 	</script>
 </head>
 <body>
-hello, world
-${data}
+hello, world<br>
+data: ${data}<br>
+oauth: ${oauth}<br>
 
-<form>
-<input type="button" value="redirect" onclick="redirect()" />
-</form>
 </body>
 </html>

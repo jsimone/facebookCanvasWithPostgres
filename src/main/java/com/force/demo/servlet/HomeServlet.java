@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class HomeServlet extends HttpServlet {
 
@@ -37,6 +41,7 @@ public class HomeServlet extends HttpServlet {
 				System.out.println("data from elements" + data);
 				req.setAttribute("sendRedirect", false);
 				req.setAttribute("data", data);
+				req.setAttribute("oauth", getOAuthToken(data));
 			} else {
 				req.setAttribute("sendRedirect", true);
 			}
@@ -44,6 +49,25 @@ public class HomeServlet extends HttpServlet {
 		
 	    req.getRequestDispatcher("facebook.jsp").forward(req, resp);
 
+	}
+	
+	private String getOAuthToken(String data) throws ServletException {
+		ObjectMapper mapper = new ObjectMapper();
+		String oauthToken = null;
+		try {
+			JsonNode rootNode = mapper.readValue(data.getBytes(), JsonNode.class);
+			if(rootNode.path("oauth_token") != null) {				
+				oauthToken = rootNode.path("oauth_token").getTextValue();
+			}
+		} catch (JsonParseException e) {
+			throw new ServletException(e);
+		} catch (JsonMappingException e) {
+			throw new ServletException(e);
+		} catch (IOException e) {
+			throw new ServletException(e);
+		}
+		
+		return oauthToken;
 	}
 
 }

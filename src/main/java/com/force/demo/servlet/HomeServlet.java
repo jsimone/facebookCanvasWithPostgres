@@ -66,16 +66,21 @@ public class HomeServlet extends HttpServlet {
 
 	}
 	
+	//two ugly hacks. First of all the data decodes with control characters in it
+	//the pattern will strip those. Then it either seems to cut off or come over incomplete
+	//that is what the curly balance bit fixes. We're probably losing data, but since we only
+	//care about the oauth token this seems to be OK
 	private String cleanJson(String data) {
         String outputData = null;
 		Pattern p = Pattern.compile("[\\x00-\\x1f]");
         Matcher m = p.matcher(data);
         outputData = m.replaceAll("");
 		System.out.println("cleaned json: " + outputData);
-		
-        if(curlyBalance(outputData) > 0) {
+		int curlyBalance = curlyBalance(outputData);
+        for (int i=0; i<curlyBalance; i++) {
         	outputData = outputData + '}';
         }
+        System.out.println("balanced json: " + outputData);
         return outputData;
 	}
 	
@@ -91,7 +96,6 @@ public class HomeServlet extends HttpServlet {
 				count--;
 			}
 		}
-		System.out.println("curly balance: " + count);
 		return count;
 	}
 	

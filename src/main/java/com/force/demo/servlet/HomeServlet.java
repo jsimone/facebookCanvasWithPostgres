@@ -36,7 +36,6 @@ public class HomeServlet extends HttpServlet {
 		if(signed_request != null) {
 			System.out.println("signed request: " + signed_request);
 			String[] elements = signed_request.split("\\.");
-			System.out.println("elements " + elements);
 			
 			if(elements.length > 1) {			
 				String payload = elements[1];
@@ -72,6 +71,8 @@ public class HomeServlet extends HttpServlet {
 		Pattern p = Pattern.compile("[\\x00-\\x1f]");
         Matcher m = p.matcher(data);
         outputData = m.replaceAll("");
+		System.out.println("cleaned json: " + outputData);
+		
         if(curlyBalance(outputData) > 0) {
         	outputData = outputData + '}';
         }
@@ -90,6 +91,7 @@ public class HomeServlet extends HttpServlet {
 				count--;
 			}
 		}
+		System.out.println("curly balance: " + count);
 		return count;
 	}
 	

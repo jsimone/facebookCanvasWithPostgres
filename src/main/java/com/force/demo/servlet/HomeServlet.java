@@ -40,9 +40,10 @@ public class HomeServlet extends HttpServlet {
 			if(elements.length > 1) {			
 				String payload = elements[1];
 				System.out.println("payload: " + payload);
-				String data = new String(Base64.decodeBase64(payload.getBytes()));
+				Base64 decoder = new Base64(true);
+				String data = new String(decoder.decode(payload.getBytes()));
 				
-				data = cleanJson(data);
+				//data = cleanJson(data);
 				
 				System.out.println("data from elements" + data);
 				req.setAttribute("oauth", getOAuthToken(data));

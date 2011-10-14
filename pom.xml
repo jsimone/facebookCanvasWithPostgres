@@ -10,7 +10,18 @@
     <properties>
         <java.version>1.6</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework.social-version>1.0.0.RELEASE</org.springframework.social-version>
     </properties>
+
+	<repositories>
+		<!-- For developing against latest Spring milestones -->
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+	</repositories>
 
     <dependencies>
         <!-- Servlet API -->
@@ -43,6 +54,22 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.5</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.social</groupId>
+		    <artifactId>spring-social-core</artifactId>
+	        <version>${org.springframework.social-version}</version>
+	    </dependency>
+		<dependency>
+		    <groupId>org.springframework.social</groupId>
+		    <artifactId>spring-social-web</artifactId>
+	        <version>${org.springframework.social-version}</version>
+	    </dependency>
+		<dependency>
+		    <groupId>org.springframework.social</groupId>
+		    <artifactId>spring-social-facebook</artifactId>
+	        <version>${org.springframework.social-version}</version>
+	    </dependency>
 		
         <!-- Jackson JSON parser -->		
         <dependency>

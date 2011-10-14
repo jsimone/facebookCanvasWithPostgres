@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,9 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.social.facebook.api.Checkin;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 
 public class HomeServlet extends HttpServlet {
 
@@ -148,18 +152,35 @@ public class HomeServlet extends HttpServlet {
             }
         }
         
-        return jsonReturn.toString();        
+        return jsonReturn.toString(); 
     }
     
+//    private String getCheckInInfo(HttpServletRequest req, String token) {
+//        URL restUrl;
+//        try {
+//            restUrl = buildFBUrl(req, "/me/checkins", token);
+//            return readApiData(restUrl);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+    
     private String getCheckInInfo(HttpServletRequest req, String token) {
-        URL restUrl;
-        try {
-            restUrl = buildFBUrl(req, "/me/checkins", token);
-            return readApiData(restUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    	Facebook facebook = new FacebookTemplate(token);
+    	List<Checkin> checkIns = facebook.placesOperations().getCheckins();
+    	for (Checkin checkin : checkIns) {
+			System.out.println("Check In: " + checkin.getPlace().getName());
+		}
+    	
+    	URL restUrl;
+    	try {
+    		restUrl = buildFBUrl(req, "/me/checkins", token);
+    		return readApiData(restUrl);
+    	} catch (MalformedURLException e) {
+    		e.printStackTrace();
+    		return null;
+    	}
     }
 
 }

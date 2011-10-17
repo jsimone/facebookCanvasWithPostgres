@@ -47,8 +47,6 @@ public class HomeServlet extends HttpServlet {
 				Base64 decoder = new Base64(true);
 				String data = new String(decoder.decode(payload.getBytes()));
 				
-				//data = cleanJson(data);
-				
 				System.out.println("data from elements" + data);
 				req.setAttribute("oauth", getOAuthToken(data));
 				String accessToken = getOAuthToken(data);
@@ -58,6 +56,7 @@ public class HomeServlet extends HttpServlet {
 				} else {
 					req.setAttribute("sendRedirect", false);					
 					req.setAttribute("checkins", getCheckInInfo(req, getOAuthToken(data)));
+					req.setAttribute("checkInObjs", getCheckInObjects(req, getOAuthToken(data)));
 				}
 			} else {
 				req.setAttribute("sendRedirect", true);
@@ -67,41 +66,8 @@ public class HomeServlet extends HttpServlet {
 		}
 		
 		System.out.println("send redirect: " + req.getAttribute("sendRedirect"));
-	    req.getRequestDispatcher("canvas.jsp").forward(req, resp);
+	    req.getRequestDispatcher("canvas-social.jsp").forward(req, resp);
 
-	}
-	
-	//two ugly hacks. First of all the data decodes with control characters in it
-	//the pattern will strip those. Then it either seems to cut off or come over incomplete
-	//that is what the curly balance bit fixes. We're probably losing data, but since we only
-	//care about the oauth token this seems to be OK
-	private String cleanJson(String data) {
-        String outputData = null;
-		Pattern p = Pattern.compile("[\\x00-\\x1f]");
-        Matcher m = p.matcher(data);
-        outputData = m.replaceAll("");
-		System.out.println("cleaned json: " + outputData);
-		int curlyBalance = curlyBalance(outputData);
-        for (int i=0; i<curlyBalance; i++) {
-        	outputData = outputData + '}';
-        }
-        System.out.println("balanced json: " + outputData);
-        return outputData;
-	}
-	
-	//return a positive number if the number of { is greater
-	//than the number of }
-	private int curlyBalance(String data) {
-		int count = 0;
-		for(int i = 0; i< data.length(); i++) {
-			if(data.charAt(i) == '{') {
-				count++;
-			}
-			if(data.charAt(i) == '}') {
-				count--;
-			}
-		}
-		return count;
 	}
 	
 	private String getOAuthToken(String data) throws ServletException {
@@ -167,12 +133,6 @@ public class HomeServlet extends HttpServlet {
 //    }
     
     private String getCheckInInfo(HttpServletRequest req, String token) {
-    	Facebook facebook = new FacebookTemplate(token);
-    	List<Checkin> checkIns = facebook.placesOperations().getCheckins();
-    	for (Checkin checkin : checkIns) {
-			System.out.println("Check In: " + checkin.getPlace().getName());
-		}
-    	
     	URL restUrl;
     	try {
     		restUrl = buildFBUrl(req, "/me/checkins", token);
@@ -181,6 +141,15 @@ public class HomeServlet extends HttpServlet {
     		e.printStackTrace();
     		return null;
     	}
+    }
+    
+    private List<Checkin> getCheckInObjects(HttpServletRequest req, String token) {
+    	Facebook facebook = new FacebookTemplate(token);
+    	List<Checkin> checkIns = facebook.placesOperations().getCheckins();
+    	for (Checkin checkin : checkIns) {
+    		System.out.println("Check In: " + checkin.getPlace().getName());
+    	}
+    	return checkIns;
     }
 
 }

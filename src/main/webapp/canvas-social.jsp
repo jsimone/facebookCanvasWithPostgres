@@ -73,6 +73,11 @@
       
       <div id="map_canvas" style="width:500px; height:400px"></div>
       
+      <ul>
+	      <c:forEach var="checkin" items="${checkInObjs}">
+	      	<li>Checked In At: ${checkin.place.name}
+	      </c:forEach>
+      </ul>
     </body>
  </html>
  

@@ -9,6 +9,7 @@
 				</script>
 			</c:if>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
 		<style type="text/css">
 		  html { height: 100% }
 		  body { height: 100%; margin: 0; padding: 0 }
@@ -62,22 +63,29 @@
       
     </head>
     <body onload="checkLoginAndLoadData()">
-      <script src="js/jquery-1.6.2.min.js">
-      </script>
-      <br><br>
-      Where Have You Been?
-      
-      <form>
-      	<input type="button" value="populate map" onclick="createMap()"/>
-      </form>
-      
-      <div id="map_canvas" style="width:500px; height:400px"></div>
-      
-      <ul>
-	      <c:forEach var="checkin" items="${checkInObjs}">
-	      	<li>Checked In At: ${checkin.place.name}, ${checkin.place.likes}
-	      </c:forEach>
-      </ul>
+  		<div class="container-fluid">
+    		<div class="sidebar">
+ 
+    		</div>
+    		<div class="content">
+		      <script src="js/jquery-1.6.2.min.js">
+		      </script>
+		      <br><br>
+		      Where Have You Been?
+		      
+		      <form>
+		      	<input type="button" value="populate map" onclick="createMap()"/>
+		      </form>
+		      
+		      <div id="map_canvas" style="width:500px; height:400px"></div>
+		      
+		      <ul>
+			      <c:forEach var="checkin" items="${checkInObjs}">
+			      	<li>Checked In At: ${checkin.place.name}, ${checkin.place.likes}
+			      </c:forEach>
+		      </ul>
+	    	</div>
+	  	</div>
     </body>
  </html>
  

@@ -64,9 +64,6 @@
     </head>
     <body onload="checkLoginAndLoadData()">
   		<div class="container-fluid">
-    		<div class="sidebar">
- 
-    		</div>
     		<div class="content">
 		      <script src="js/jquery-1.6.2.min.js">
 		      </script>
@@ -79,11 +76,12 @@
 		      
 		      <div id="map_canvas" style="width:500px; height:400px"></div>
 		      
-		      <ul>
+		      <table class="zebra-striped">
+		          <tr><th>Name</th><th>Location</th></tr>
 			      <c:forEach var="checkin" items="${checkInObjs}">
-			      	<li>Checked In At: ${checkin.place.name}, ${checkin.place.likes}
+			      	<tr><td>${checkin.place.name}</td><td>${checkin.place.location.city},${checkin.place.location.state}</td></tr>
 			      </c:forEach>
-		      </ul>
+		      </table>
 	    	</div>
 	  	</div>
     </body>

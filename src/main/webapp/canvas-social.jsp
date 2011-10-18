@@ -63,7 +63,7 @@
       
     </head>
     <body onload="checkLoginAndLoadData()">
-  		<div class="container-fluid" style="max-width: 720px">
+  		<div class="container" style="max-width: 720px">
 		      <script src="js/jquery-1.6.2.min.js">
 		      </script>
 		      <br><br>

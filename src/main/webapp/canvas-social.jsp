@@ -75,7 +75,7 @@
       
       <ul>
 	      <c:forEach var="checkin" items="${checkInObjs}">
-	      	<li>Checked In At: ${checkin.place.name}, ${checkin.place.website}
+	      	<li>Checked In At: ${checkin.place.name}, ${checkin.place.likes}
 	      </c:forEach>
       </ul>
     </body>

@@ -74,12 +74,14 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/note/save", method=RequestMethod.POST)
-	public void saveNote(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+	public ModelAndView saveNote(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		Note note = new Note();
 		note.setPlaceId("1");
 		note.setProfileId("1");
 		note.setText("text");
 		noteDao.saveNote(note);
+		ModelAndView mv = new ModelAndView("canvas-social");
+		return mv;
 	}
 	
 	private String getOAuthToken(String data) throws ServletException {

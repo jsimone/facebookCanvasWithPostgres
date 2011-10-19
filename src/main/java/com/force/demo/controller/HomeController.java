@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.force.demo.dao.NoteDao;
+import com.force.demo.model.Note;
 
 @Controller
 public class HomeController {
@@ -70,6 +71,15 @@ public class HomeController {
 		}
 		
 		return mv;
+	}
+	
+	@RequestMapping(value="/note/save", method=RequestMethod.POST)
+	public void saveNote(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		Note note = new Note();
+		note.setPlaceId("1");
+		note.setProfileId("1");
+		note.setText("text");
+		noteDao.saveNote(note);
 	}
 	
 	private String getOAuthToken(String data) throws ServletException {

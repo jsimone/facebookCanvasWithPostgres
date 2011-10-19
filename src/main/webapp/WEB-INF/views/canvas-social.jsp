@@ -76,9 +76,17 @@
 		      <div id="map_canvas" style="width:500px; height:400px"></div>
 		      
 		      <table class="zebra-striped">
-		          <tr><th>Name</th><th>Location</th></tr>
+		          <tr><th>Name</th><th>Note</th></tr>
 			      <c:forEach var="checkin" items="${checkInObjs}">
-			      	<tr><td>${checkin.place.name}</td><td>${checkin.place.location.city},${checkin.place.location.state}</td></tr>
+			      	<tr>
+			      		<td>${checkin.place.name}</td>
+			      		<td>
+			      			<form action="/note/save" method="post">
+			      				<input type="text"/>
+			      				<input type="submit" name="save"/>
+			      			</form>
+			      		</td>
+			      	</tr>
 			      </c:forEach>
 		      </table>
 	  	</div>

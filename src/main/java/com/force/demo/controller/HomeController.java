@@ -23,6 +23,7 @@ import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,13 +56,16 @@ public class HomeController {
 				System.out.println("data from elements" + data);
 				mv.addObject("oauth", getOAuthToken(data));
 				String accessToken = getOAuthToken(data);
+				mv.addObject("accessToken", accessToken);
 				System.out.println("accessToken: " + accessToken);
+				
 				if(accessToken == null || "".equals(accessToken)) {
 					mv.addObject("sendRedirect", true);
 				} else {
 					mv.addObject("sendRedirect", false);					
 					mv.addObject("checkins", getCheckInInfo(req, getOAuthToken(data)));
 					mv.addObject("checkInObjs", getCheckInObjects(req, getOAuthToken(data)));
+					mv.addObject("profileId", getProfileId(getOAuthToken(data)));
 				}
 			} else {
 				mv.addObject("sendRedirect", true);
@@ -73,11 +77,12 @@ public class HomeController {
 		return mv;
 	}
 	
-	@RequestMapping(value="/note/save", method=RequestMethod.POST)
-	public ModelAndView saveNote(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+	@RequestMapping(value="/note/{profileId}/{placeId}", method=RequestMethod.POST)
+	public ModelAndView saveNote(@PathVariable String profileId, @PathVariable String placeId, 
+			HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		Note note = new Note();
-		note.setPlaceId("1");
-		note.setProfileId("1");
+		note.setPlaceId(placeId);
+		note.setProfileId(profileId);
 		note.setText("text");
 		noteDao.saveNote(note);
 		ModelAndView mv = new ModelAndView("canvas-social");
@@ -153,8 +158,12 @@ public class HomeController {
     		System.out.println("Check In: " + checkin.getPlace().getName());
     	}
     	
-    	FacebookProfile profile = facebook.userOperations().getUserProfile();
-    	
     	return checkIns;
+    }
+    
+    private String getProfileId(String token) {
+    	Facebook facebook = new FacebookTemplate(token);
+    	FacebookProfile profile = facebook.userOperations().getUserProfile();
+    	return profile.getId();
     }
 }

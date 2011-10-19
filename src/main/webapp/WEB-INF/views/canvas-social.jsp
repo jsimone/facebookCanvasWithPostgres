@@ -81,7 +81,7 @@
 			      	<tr>
 			      		<td>${checkin.place.name}</td>
 			      		<td>
-			      			<form action="/note/save" method="post">
+			      			<form action="/note/save/${profileId}/${checkin.place.id}" method="post">
 			      				<input type="text"/>
 			      				<input type="submit" name="save"/>
 			      			</form>

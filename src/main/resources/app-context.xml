@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+		default-autowire="byName">
+
+	<tx:annotation-driven />
+
+	<!-- Scans within the base package of the application for @Components to configure as beans -->
+	<context:component-scan base-package="com.force.demo" />
+	
+	<bean class="com.force.demo.dao.NoteDaoImpl" id="noteDao"/>
+	
+    <bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
+        <property name="url" value="#{ systemEnvironment['DATABASE_URL'] !=null ? systemEnvironment['DATABASE_URL'].replaceAll('postgres://(.*):(.*)@(.*)','jdbc:postgresql://$3?user=$1&amp;password=$2') : '${database.url}' }"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="1800000"/>
+        <property name="numTestsPerEvictionRun" value="3"/>
+        <property name="minEvictableIdleTimeMillis" value="1800000"/>
+    </bean>
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
+    <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+        <property name="persistenceUnitName" value="persistenceUnit"/>
+        <property name="dataSource" ref="dataSource"/>
+	    <property name="jpaPropertyMap">
+	      <map>
+	        <entry key="hibernate.dialect" value="#{ systemEnvironment['DATABASE_URL'] !=null ? 'org.hibernate.dialect.PostgreSQLDialect' : 'org.hibernate.dialect.HSQLDialect'}"/>
+	      </map>
+	    </property>
+    </bean>
+
+</beans>

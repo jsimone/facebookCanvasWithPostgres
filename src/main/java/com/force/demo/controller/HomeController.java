@@ -1,4 +1,4 @@
-package com.force.demo.servlet;
+package com.force.demo.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,10 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,22 +17,28 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.Checkin;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
-public class HomeServlet extends HttpServlet {
+import com.force.demo.dao.NoteDao;
+
+@Controller
+public class HomeController {
+
+	@Autowired
+	private NoteDao noteDao;
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doPost(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	@RequestMapping(value="/", method=RequestMethod.POST)
+	public ModelAndView home(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		//TODO: fix exception handling
+		ModelAndView mv = new ModelAndView("canvas-social");
 		String signed_request = req.getParameter("signed_request");
 		
 		if(signed_request != null) {
@@ -49,26 +52,24 @@ public class HomeServlet extends HttpServlet {
 				String data = new String(decoder.decode(payload.getBytes()));
 				
 				System.out.println("data from elements" + data);
-				req.setAttribute("oauth", getOAuthToken(data));
+				mv.addObject("oauth", getOAuthToken(data));
 				String accessToken = getOAuthToken(data);
 				System.out.println("accessToken: " + accessToken);
 				if(accessToken == null || "".equals(accessToken)) {
-					req.setAttribute("sendRedirect", true);
+					mv.addObject("sendRedirect", true);
 				} else {
-					req.setAttribute("sendRedirect", false);					
-					req.setAttribute("checkins", getCheckInInfo(req, getOAuthToken(data)));
-					req.setAttribute("checkInObjs", getCheckInObjects(req, getOAuthToken(data)));
+					mv.addObject("sendRedirect", false);					
+					mv.addObject("checkins", getCheckInInfo(req, getOAuthToken(data)));
+					mv.addObject("checkInObjs", getCheckInObjects(req, getOAuthToken(data)));
 				}
 			} else {
-				req.setAttribute("sendRedirect", true);
+				mv.addObject("sendRedirect", true);
 			}
 		} else {
-			req.setAttribute("sendRedirect", true);
+			mv.addObject("sendRedirect", true);
 		}
 		
-		System.out.println("send redirect: " + req.getAttribute("sendRedirect"));
-	    req.getRequestDispatcher("canvas-social.jsp").forward(req, resp);
-
+		return mv;
 	}
 	
 	private String getOAuthToken(String data) throws ServletException {
@@ -122,17 +123,6 @@ public class HomeServlet extends HttpServlet {
         return jsonReturn.toString(); 
     }
     
-//    private String getCheckInInfo(HttpServletRequest req, String token) {
-//        URL restUrl;
-//        try {
-//            restUrl = buildFBUrl(req, "/me/checkins", token);
-//            return readApiData(restUrl);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-    
     private String getCheckInInfo(HttpServletRequest req, String token) {
     	URL restUrl;
     	try {
@@ -155,5 +145,4 @@ public class HomeServlet extends HttpServlet {
     	
     	return checkIns;
     }
-
 }

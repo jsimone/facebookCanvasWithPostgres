@@ -40,41 +40,31 @@ public class HomeController {
 	@RequestMapping(value="/", method=RequestMethod.POST)
 	public ModelAndView home(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		//TODO: fix exception handling
-		ModelAndView mv = new ModelAndView("canvas-social");
 		String signed_request = req.getParameter("signed_request");
 		
-		if(signed_request != null) {
-			System.out.println("signed request: " + signed_request);
-			String[] elements = signed_request.split("\\.");
-			
-			if(elements.length > 1) {			
-				String payload = elements[1];
-				System.out.println("payload: " + payload);
-				Base64 decoder = new Base64(true);
-				String data = new String(decoder.decode(payload.getBytes()));
-				
-				System.out.println("data from elements" + data);
-				mv.addObject("oauth", getOAuthToken(data));
-				String accessToken = getOAuthToken(data);
-				mv.addObject("accessToken", accessToken);
-				System.out.println("accessToken: " + accessToken);
-				
-				if(accessToken == null || "".equals(accessToken)) {
-					mv.addObject("sendRedirect", true);
-				} else {
-					mv.addObject("sendRedirect", false);					
-					mv.addObject("checkins", getCheckInInfo(req, getOAuthToken(data)));
-					mv.addObject("checkInObjs", getCheckInObjects(req, getOAuthToken(data)));
-					mv.addObject("profileId", getProfileId(getOAuthToken(data)));
-				}
-			} else {
-				mv.addObject("sendRedirect", true);
-			}
-		} else {
-			mv.addObject("sendRedirect", true);
+		if(signed_request == null) {
+			return redirectForLogin();
 		}
 		
-		return mv;
+		System.out.println("signed request: " + signed_request);
+		String[] elements = signed_request.split("\\.");
+		
+		if(elements.length < 2) {
+			return redirectForLogin();
+		}
+		
+		//TODO: verify checksum
+		String payload = elements[1];
+		System.out.println("payload: " + payload);
+		Base64 decoder = new Base64(true);
+		String data = new String(decoder.decode(payload.getBytes()));
+		String oauthToken = getOAuthToken(data);
+
+		if(oauthToken == null || "".equals(oauthToken)) {
+			return redirectForLogin();
+		}
+		
+		return renderMainPage(oauthToken);
 	}
 	
 	@RequestMapping(value="/note/{profileId}/{placeId}", method=RequestMethod.POST)
@@ -87,6 +77,25 @@ public class HomeController {
 		noteDao.saveNote(note);
 		ModelAndView mv = new ModelAndView("canvas-social");
 		return mv;
+	}
+	
+	private ModelAndView redirectForLogin() {
+		ModelAndView mv = new ModelAndView("canvas-social");
+		mv.addObject("sendRedirect", true);
+		return mv;
+	}
+	
+	private ModelAndView renderMainPage(String oauthToken) {
+		ModelAndView mv = new ModelAndView("canvas-social");
+		
+		mv.addObject("accessToken", oauthToken);
+		
+		mv.addObject("sendRedirect", false);					
+		//mv.addObject("checkins", getCheckInInfo(req, getOAuthToken(data)));
+		mv.addObject("checkInObjs", getCheckInObjects(oauthToken));
+		mv.addObject("profileId", getProfileId(oauthToken));
+		
+		return mv;		
 	}
 	
 	private String getOAuthToken(String data) throws ServletException {
@@ -151,7 +160,7 @@ public class HomeController {
     	}
     }
     
-    private List<Checkin> getCheckInObjects(HttpServletRequest req, String token) {
+    private List<Checkin> getCheckInObjects(String token) {
     	Facebook facebook = new FacebookTemplate(token);
     	List<Checkin> checkIns = facebook.placesOperations().getCheckins();
     	for (Checkin checkin : checkIns) {

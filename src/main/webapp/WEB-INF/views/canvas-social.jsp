@@ -82,8 +82,8 @@
 			      		<td>${checkinNote.checkin.place.name}</td>
 			      		<td>
 			      			<c:choose>
-				      			<c:when test="${checkinNote.text} != ''}">
-				      				${checkinNote.text}
+				      			<c:when test="${checkinNote.noteText} != ''}">
+				      				${checkinNote.noteText}
 					      		</c:when>
 					      		<c:otherwise>
 					      			<form action="/note/${profileId}/${checkinNote.checkin.place.id}" method="post">

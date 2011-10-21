@@ -79,7 +79,7 @@
 		          <tr><th>Name</th><th>Note</th></tr>
 			      <c:forEach var="checkinNote" items="${checkInNotes}">
 			      	<tr>
-			      		<td>${checkin.place.name}</td>
+			      		<td>${checkinNote.checkin.place.name}</td>
 			      		<td>
 			      			<form action="/note/${profileId}/${checkinNote.checkin.place.id}" method="post">
 			      				<input type="text" name="noteText"/>

@@ -110,6 +110,7 @@ public class HomeController {
 					checkinNote.setNoteText(note.getText());
 				}
 			}
+			checkinNotes.add(checkinNote);
 		}
 		
 		mv.addObject("checkInNotes", checkinNotes);

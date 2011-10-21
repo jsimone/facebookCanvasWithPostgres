@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.force.demo.dao.NoteDao;
+import com.force.demo.model.CheckinNote;
 import com.force.demo.model.Note;
 
 @Controller
@@ -73,10 +75,12 @@ public class HomeController {
 		Note note = new Note();
 		note.setPlaceId(placeId);
 		note.setProfileId(profileId);
-		note.setText("text");
+		String text = req.getParameter("noteText");
+		String oauthToken = req.getParameter("accessToken");
+		
+		note.setText(text);
 		noteDao.saveNote(note);
-		ModelAndView mv = new ModelAndView("canvas-social");
-		return mv;
+		return renderMainPage(oauthToken);
 	}
 	
 	private ModelAndView redirectForLogin() {
@@ -92,8 +96,24 @@ public class HomeController {
 		
 		mv.addObject("sendRedirect", false);					
 		//mv.addObject("checkins", getCheckInInfo(req, getOAuthToken(data)));
-		mv.addObject("checkInObjs", getCheckInObjects(oauthToken));
-		mv.addObject("profileId", getProfileId(oauthToken));
+		
+		String profileId = getProfileId(oauthToken);
+		
+		List<Checkin> checkins = getCheckInObjects(oauthToken);
+		List<Note> notes = noteDao.getNotesForUser(profileId);
+		List<CheckinNote> checkinNotes = new ArrayList<CheckinNote>();
+		
+		for (Checkin checkin : checkins) {
+			CheckinNote checkinNote = new CheckinNote(checkin);
+			for (Note note : notes) {
+				if(note.getPlaceId().equals(checkin.getPlace().getId())) {
+					checkinNote.setNoteText(note.getText());
+				}
+			}
+		}
+		
+		mv.addObject("checkInNotes", checkinNotes);
+		mv.addObject("profileId", profileId);
 		
 		return mv;		
 	}

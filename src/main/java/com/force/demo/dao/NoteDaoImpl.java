@@ -1,5 +1,7 @@
 package com.force.demo.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -29,6 +31,14 @@ public class NoteDaoImpl implements NoteDao {
         query.setParameter(1, profileId);
         query.setParameter(2, placeId);
         return (Note) query.getSingleResult();
+	}
+	
+	@Override
+	@SuppressWarnings(value="unchecked")
+	public List<Note> getNotesForUser(String profileId) {
+		Query query =  entityManager.createQuery("from Note note where note.profileId = ?1", Note.class);
+		query.setParameter(1, profileId);
+		return query.getResultList();
 	}
 
 }

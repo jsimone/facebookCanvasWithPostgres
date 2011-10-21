@@ -77,12 +77,13 @@
 		      
 		      <table class="zebra-striped">
 		          <tr><th>Name</th><th>Note</th></tr>
-			      <c:forEach var="checkin" items="${checkInObjs}">
+			      <c:forEach var="checkinNote" items="${checkInNotes}">
 			      	<tr>
 			      		<td>${checkin.place.name}</td>
 			      		<td>
-			      			<form action="/note/save/${profileId}/${checkin.place.id}" method="post">
-			      				<input type="text"/>
+			      			<form action="/note/${profileId}/${checkinNote.checkin.place.id}" method="post">
+			      				<input type="text" name="noteText"/>
+			      				<input type="hidden" name="accessToken" value="${accessToken}"/>
 			      				<input type="submit" name="save"/>
 			      			</form>
 			      		</td>

@@ -81,7 +81,6 @@
 			      	<tr>
 			      		<td>${checkinNote.checkin.place.name}</td>
 			      		<td>
-		      				${checkinNote.noteText}
 			      			<c:choose>
 				      			<c:when test="${not empty checkinNote.noteText}">
 				      				${checkinNote.noteText}

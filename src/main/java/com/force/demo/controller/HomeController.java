@@ -105,8 +105,10 @@ public class HomeController {
 		
 		for (Checkin checkin : checkins) {
 			CheckinNote checkinNote = new CheckinNote(checkin);
+			System.out.println("number of notes: " + notes.size());
 			for (Note note : notes) {
 				if(note.getPlaceId().equals(checkin.getPlace().getId())) {
+					System.out.println("adding note text: " + checkin.getPlace().getName() + ", " + note.getText());
 					checkinNote.setNoteText(note.getText());
 				}
 			}

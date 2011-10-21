@@ -83,7 +83,7 @@
 			      		<td>
 		      				${checkinNote.noteText}
 			      			<c:choose>
-				      			<c:when test="${checkinNote.noteText != 'null'}">
+				      			<c:when test="${not empty checkinNote.noteText}">
 				      				${checkinNote.noteText}
 					      		</c:when>
 					      		<c:otherwise>

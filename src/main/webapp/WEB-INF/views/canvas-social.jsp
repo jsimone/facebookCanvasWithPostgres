@@ -81,11 +81,18 @@
 			      	<tr>
 			      		<td>${checkinNote.checkin.place.name}</td>
 			      		<td>
-			      			<form action="/note/${profileId}/${checkinNote.checkin.place.id}" method="post">
-			      				<input type="text" name="noteText"/>
-			      				<input type="hidden" name="accessToken" value="${accessToken}"/>
-			      				<input type="submit" name="save"/>
-			      			</form>
+			      			<c:choose>
+				      			<c:when test="${checkinNote.text} != ''}/>
+				      				${checkinNote.text}
+					      		</c:when>
+					      		<c:otherwise>
+					      			<form action="/note/${profileId}/${checkinNote.checkin.place.id}" method="post">
+					      				<input type="text" name="noteText"/>
+					      				<input type="hidden" name="accessToken" value="${accessToken}"/>
+					      				<input type="submit" name="save"/>
+					      			</form>
+					      		</c:otherwise>
+				      		</c:choose>
 			      		</td>
 			      	</tr>
 			      </c:forEach>

@@ -39,19 +39,15 @@ public class HomeServlet extends HttpServlet {
 		String signed_request = req.getParameter("signed_request");
 		
 		if(signed_request != null) {
-			System.out.println("signed request: " + signed_request);
 			String[] elements = signed_request.split("\\.");
 			
 			if(elements.length > 1) {			
 				String payload = elements[1];
-				System.out.println("payload: " + payload);
 				Base64 decoder = new Base64(true);
 				String data = new String(decoder.decode(payload.getBytes()));
 				
-				System.out.println("data from elements" + data);
 				req.setAttribute("oauth", getOAuthToken(data));
 				String accessToken = getOAuthToken(data);
-				System.out.println("accessToken: " + accessToken);
 				if(accessToken == null || "".equals(accessToken)) {
 					req.setAttribute("sendRedirect", true);
 				} else {
@@ -66,7 +62,6 @@ public class HomeServlet extends HttpServlet {
 			req.setAttribute("sendRedirect", true);
 		}
 		
-		System.out.println("send redirect: " + req.getAttribute("sendRedirect"));
 	    req.getRequestDispatcher("canvas-social.jsp").forward(req, resp);
 
 	}

@@ -11,9 +11,9 @@
 	<tx:annotation-driven />
 
 	<!-- Scans within the base package of the application for @Components to configure as beans -->
-	<context:component-scan base-package="com.force.demo" />
+	<context:component-scan base-package="com.heroku.demo" />
 	
-	<bean class="com.force.demo.dao.NoteDaoImpl" id="noteDao"/>
+	<bean class="com.heroku.demo.dao.NoteDaoImpl" id="noteDao"/>
 	
     <bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
         <property name="url" value="#{ systemEnvironment['DATABASE_URL'] !=null ? systemEnvironment['DATABASE_URL'].replaceAll('postgres://(.*):(.*)@(.*)','jdbc:postgresql://$3?user=$1&amp;password=$2') : '${database.url}' }"/>
